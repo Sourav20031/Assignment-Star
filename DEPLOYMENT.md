@@ -32,11 +32,8 @@ git push
 ### Step 3: Set Environment Variables
 Go to the **Variables** tab of your service and add:
 - `NODE_ENV` = `production`
-- `MONGODB_URI` = `mongodb+srv://souravkumar:souravkumar6163@assignment.012vchn.mongodb.net/eventplanner?appName=Assignment`
 - `JWT_SECRET` = `your_secure_random_string`
 - `JWT_EXPIRE` = `7d`
-- `OPENROUTER_API_KEY` = `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`
-- `OPENROUTER_MODEL` = `nvidia/nemotron-3-ultra-550b-a55b:free`
 *(Note: You do **not** need `CLIENT_URL` anymore since everything runs on the same domain!)*
 
 ### Step 4: Expose public domain
