@@ -79,35 +79,33 @@ git clone <your-repo-url>
 cd Assignment
 ```
 
-### 2. Set up the backend
+### 2. Quick Setup & Run (Unified Command)
+You can build and install the entire project from the root folder:
 
+```bash
+# Install all dependencies and build the client
+npm run build
+
+# Start the application
+npm start
+```
+
+### 3. Manual Setup (For Development)
+
+#### Backend:
 ```bash
 cd server
 npm install
-```
-
-Copy and configure environment variables:
-```bash
-cp .env.example .env
-# Edit .env with your values
-```
-
-Start the backend:
-```bash
+cp .env.example .env     # Configure variables inside .env
 npm run dev
 ```
 
-The server will start on `http://localhost:5000`.
-
-### 3. Set up the frontend
-
+#### Frontend:
 ```bash
 cd ../client
 npm install
 npm run dev
 ```
-
-The client will start on `http://localhost:5175`.
 
 ---
 
@@ -227,16 +225,25 @@ The client will start on `http://localhost:5175`.
 
 ## 🚀 Deployment
 
-### Backend (e.g. Railway, Render)
-1. Set all environment variables in your hosting platform
-2. Set `NODE_ENV=production`
-3. Set `CLIENT_URL` to your frontend domain
-4. Run `npm start`
+### 1. Unified Deployment (Recommended — Railway or Render)
+In the unified setup, the project runs as a single service. The Express backend builds and serves the React static files directly.
 
-### Frontend (e.g. Vercel, Netlify)
-1. Set `VITE_API_URL` if not using a proxy
-2. Update `vite.config.js` proxy target to your deployed backend URL
-3. Run `npm run build` and deploy the `dist/` folder
+1. **Deploy to Render or Railway** using the root folder `/` as the root directory.
+2. The platform will automatically run the root `package.json` build scripts:
+   - It runs `npm run build` which installs client dependencies (including devDependencies), builds Vite, and installs server dependencies.
+3. **Environment Variables**:
+   - Set `NODE_ENV=production`
+   - Set `PORT` (usually auto-injected by the host)
+   - Set `MONGODB_URI`
+   - Set `JWT_SECRET`
+   - Set `OPENROUTER_API_KEY`
+   - Set `OPENROUTER_MODEL`
+4. The start command is automatically run as `npm start`.
+
+### 2. Separate Deployment (Frontend on Vercel + Backend on Railway/Render)
+If you choose to keep them separate:
+- **Backend**: Set the root directory to `/server`. Set your environment variables (including `CLIENT_URL` pointing to your Vercel domain).
+- **Frontend**: Set the root directory to `/client`. Set `VITE_API_URL` pointing to your deployed backend API URL (e.g. `https://your-backend.onrender.com/api`). **Trigger a rebuild on Vercel** after saving variables so Vite compiles them into the JavaScript bundle.
 
 ---
 
