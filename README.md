@@ -1,11 +1,11 @@
 # EventGenius — AI Event Planning Assistant
 
-> A production-ready full-stack AI Event Planning Assistant built with React, Node.js, MongoDB, and the Google Gemini API.
+> A production-ready full-stack AI Event Planning Assistant built with React, Node.js, MongoDB, and the OpenRouter API (utilizing NVIDIA Nemotron).
 
 [![React](https://img.shields.io/badge/React-18-blue?logo=react)](https://react.dev)
 [![Node.js](https://img.shields.io/badge/Node.js-20-green?logo=node.js)](https://nodejs.org)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Local-success?logo=mongodb)](https://mongodb.com)
-[![Gemini](https://img.shields.io/badge/Gemini-1.5--flash-orange?logo=google)](https://ai.google.dev)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-success?logo=mongodb)](https://mongodb.com)
+[![OpenRouter](https://img.shields.io/badge/OpenRouter-Nemotron--3--Ultra-purple)](https://openrouter.ai)
 
 ---
 
@@ -14,7 +14,7 @@
 ### Core
 - **JWT Authentication** — Register, login, logout with HTTP-only cookies and secure session management
 - **Protected Routes** — All dashboard routes are protected; unauthorized users are redirected to login
-- **AI Event Planning** — Generate complete event plans (overview, budget breakdown, vendors, timeline, checklist) using Gemini AI
+- **AI Event Planning** — Generate complete event plans (overview, budget breakdown, vendors, timeline, checklist) using OpenRouter AI
 - **AI Chat Assistant** — Conversational AI with full conversation history, context-aware responses
 - **Saved Plans** — Save, browse, favorite, and delete event plans
 - **Dashboard Analytics** — Charts (bar + pie) for monthly activity and event type distribution
@@ -25,7 +25,7 @@
 - 📄 **PDF Export** — Multi-page formatted PDF with cover page, charts, and all plan sections
 - 📱 **WhatsApp Sharing** — Share event summary directly to WhatsApp
 - 🌙 **Dark Mode** — System-preference detection + manual toggle with persistence
-- 📩 **AI Invitation Messages** — Generate formal/casual invitation text with Gemini
+- 📩 **AI Invitation Messages** — Generate formal/casual invitation text with OpenRouter AI
 - 🎨 **AI Image Prompts** — Generate DALL·E/Midjourney prompts to visualize your event
 
 ---
@@ -50,7 +50,7 @@ Assignment/
 │   │   └── EventPlan.model.js     # Event plan schema
 │   ├── routes/              # Express routers
 │   ├── services/
-│   │   └── gemini.service.js  # Gemini API integration
+│   │   └── ai.service.js      # OpenRouter AI integration
 │   └── index.js             # App entry point
 │
 └── client/                  # React + Vite + Tailwind Frontend
@@ -70,7 +70,7 @@ Assignment/
 
 - Node.js v18+
 - MongoDB (local or MongoDB Atlas)
-- Google Gemini API key ([get one free](https://aistudio.google.com/apikey))
+- OpenRouter API key ([get one here](https://openrouter.ai/keys))
 
 ### 1. Clone the repository
 
@@ -107,7 +107,7 @@ npm install
 npm run dev
 ```
 
-The client will start on `http://localhost:5173`.
+The client will start on `http://localhost:5175`.
 
 ---
 
@@ -118,11 +118,12 @@ The client will start on `http://localhost:5173`.
 | Variable | Description | Example |
 |---|---|---|
 | `PORT` | Server port | `5000` |
-| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/eventplanner` |
+| `MONGODB_URI` | MongoDB connection string | `mongodb+srv://...` |
 | `JWT_SECRET` | Secret for JWT signing (min 32 chars) | `your_super_secret_key_here` |
 | `JWT_EXPIRE` | JWT expiry duration | `7d` |
-| `GEMINI_API_KEY` | Google Gemini API key | `AIza...` |
-| `CLIENT_URL` | Frontend URL for CORS | `http://localhost:5173` |
+| `OPENROUTER_API_KEY` | OpenRouter API Key | `sk-or-v1-...` |
+| `OPENROUTER_MODEL` | OpenRouter Model | `nvidia/nemotron-3-ultra-550b-a55b:free` |
+| `CLIENT_URL` | Frontend URL for CORS | `http://localhost:5175` |
 | `NODE_ENV` | Environment | `development` |
 
 ---
@@ -182,19 +183,19 @@ The client will start on `http://localhost:5173`.
 ## 🧠 AI Prompt Engineering
 
 ### Event Planner Prompt
-- Uses `responseMimeType: 'application/json'` for guaranteed structured JSON output
-- Instructs Gemini to fill all 8 budget categories summing exactly to the provided budget
-- Tailors vendor names and recommendations to the specified Indian city
-- Returns: overview, theme, highlights, budgetBreakdown, vendors, timeline, checklist
+- Uses OpenAI-compatible `response_format: { type: "json_object" }` for guaranteed structured JSON output.
+- Instructs the model to fill all 8 budget categories summing exactly to the provided budget.
+- Tailors vendor names and recommendations to the specified Indian city.
+- Returns: overview, theme, highlights, budgetBreakdown, vendors, timeline, checklist.
 
 ### Chat Assistant System Prompt
-- Establishes "EventGenius" persona as a 15-year expert event planner
-- Maintains full conversation history for context-aware responses
-- Covers: themes, vendors, budgets, timelines, catering, entertainment
+- Establishes "EventGenius" persona as a 15-year expert event planner.
+- Maintains full conversation history for context-aware responses.
+- Covers: themes, vendors, budgets, timelines, catering, entertainment.
 
 ### Invitation Generator
-- Generates two versions: formal and casual
-- Personalizes with event type, theme, date, city, and host name
+- Generates two versions: formal and casual.
+- Personalizes with event type, theme, date, city, and host name.
 
 ---
 
@@ -208,8 +209,8 @@ The client will start on `http://localhost:5173`.
 | Charts | Recharts |
 | PDF | jsPDF |
 | Backend | Node.js, Express.js |
-| Database | MongoDB + Mongoose |
-| AI | Google Gemini 1.5 Flash |
+| Database | MongoDB Atlas |
+| AI | OpenRouter (NVIDIA Nemotron 3 Ultra) |
 | Auth | JWT (HTTP-only cookies), bcryptjs |
 | Validation | express-validator |
 | Security | Helmet, express-rate-limit, CORS |
