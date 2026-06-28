@@ -1,5 +1,5 @@
 import Conversation from '../models/Conversation.model.js';
-import { sendChatMessage } from '../services/gemini.service.js';
+import { sendChatMessage } from '../services/ai.service.js';
 
 // @desc    Send a message in a conversation
 // @route   POST /api/chat/message

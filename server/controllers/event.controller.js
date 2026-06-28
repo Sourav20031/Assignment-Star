@@ -3,7 +3,7 @@ import {
   generateEventPlan,
   generateInvitationMessage,
   generateEventImagePrompt,
-} from '../services/gemini.service.js';
+} from '../services/ai.service.js';
 
 // @desc    Generate and save a new event plan
 // @route   POST /api/events/generate
@@ -48,17 +48,17 @@ export const generatePlan = async (req, res, next) => {
 
     res.status(201).json({ success: true, eventPlan });
   } catch (error) {
-    if (error.message?.includes('API_KEY') || error.message?.includes('quota')) {
-      return res.status(503).json({
-        success: false,
-        message: 'AI service temporarily unavailable. Please check your API key.',
-      });
-    }
-    // JSON parse error from Gemini
+    console.error('❌ Event generation error:', error.message || error);
+    
+    // JSON parse error from AI response
     if (error instanceof SyntaxError) {
       return res.status(500).json({ success: false, message: 'Failed to parse AI response. Please try again.' });
     }
-    next(error);
+    // Return actual error message for debugging
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to generate event plan.',
+    });
   }
 };
 
