@@ -18,16 +18,40 @@ connectDB();
 
 const app = express();
 
+// Trust reverse proxy (Railway, Heroku, etc.)
+app.set('trust proxy', 1);
+
 // Security headers
 app.use(helmet());
 
-// CORS
+// CORS Configuration
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://localhost:5175',
+  'http://localhost:3000'
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5175',
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      const normalizedOrigin = origin.replace(/\/$/, '');
+      const isAllowed = allowedOrigins.some(allowed => {
+        if (!allowed) return false;
+        return allowed.replace(/\/$/, '') === normalizedOrigin;
+      }) || normalizedOrigin.endsWith('.vercel.app');
+      
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        console.warn(`⚠️ Blocked by CORS: Origin ${origin} not in allowed list.`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   })
 );
 
@@ -59,6 +83,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Health check
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'Event Planner API is running', timestamp: new Date().toISOString() });
 });
